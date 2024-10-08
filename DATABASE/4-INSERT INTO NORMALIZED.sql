@@ -39,9 +39,10 @@ FROM
 --    ud.vehicle_make IS NOT NULL;
 
 -- Insert into Vehicles Table
-INSERT INTO Vehicles (vehicleID, MakeID, Model, Year, Color, LicensePlate)
+INSERT INTO Vehicles (vehicleID, DriverID, MakeID, Model, Year, Color, LicensePlate)
 SELECT DISTINCT
     vehicle_id,
+    driver_id,
     vehiclemake_ID,
     vehicle_model,
     vehicle_year,

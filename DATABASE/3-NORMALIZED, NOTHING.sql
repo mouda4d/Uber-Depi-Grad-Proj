@@ -13,6 +13,7 @@ CREATE TABLE VehicleMakes (
 
 CREATE TABLE Vehicles (
     VehicleID INT,
+    DriverID INT,
     MakeID INT,
     Model VARCHAR(255),
     Year INT,
@@ -21,10 +22,17 @@ CREATE TABLE Vehicles (
 );
 
 CREATE TABLE Location (
-    LocationID INT,
-    Longitude DECIMAL(12, 8),
-    Latitude DECIMAL(12, 8)
+    LocationID INT,              -- Unique identifier for each location
+    Longitude DECIMAL(12, 8),                -- Longitude coordinate
+    Latitude DECIMAL(12, 8),                 -- Latitude coordinate
+    --location_detail VARCHAR(255),          -- Detail about the location
+    --country VARCHAR(100),                  -- Country name
+    --city VARCHAR(100),                     -- City name
+    --road VARCHAR(100),                     -- Road name
+    --state VARCHAR(100),                    -- State or region
+    --postcode VARCHAR(20)                   -- Postal code
 );
+
 
 CREATE TABLE Request (
     RequestID INT,

@@ -35,3 +35,4 @@ SET
     uber_data_final.request_id = allCTE.request_id
 FROM allCTE
 WHERE uber_data_final.trip_id = allCTE.trip_id;
+
