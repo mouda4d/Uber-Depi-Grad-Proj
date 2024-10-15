@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  sqlserver:
+    build: 
+      context: ./SQL-image/
+      dockerfile: Dockerfile.sql # Specify custom Dockerfile for SQL Server
+    container_name: sqlserver-container
+    image: mcr.microsoft.com/mssql/server:2019-latest  # Official SQL Server image
+    environment:
+      - SA_PASSWORD=P@SSW0RD  # SQL Server Admin password
+      - ACCEPT_EULA=Y          # Accept the EULA for SQL Server
+      - MSSQL_DATABASE=UBER
+      - CSV_PATH=/var/lib/sql-files/uber_data.csv  # Set the CSV path as an environment variable
+    ports:
+      - "1433:1433"  # SQL Server port
+    volumes:
+      - ./SQL-image/sql:/usr/src/sql  # Mount SQL scripts to the container
+      - ./SQL-image/data:/var/lib/sql-files  # Mount the CSV directory
+    networks:
+      - uber-net
+
+  jupyter:
+    build: 
+      context: ./Notebook-image/
+      dockerfile: Dockerfile.jupyter  # Specify custom Dockerfile for Jupyter
+    container_name: jupyter-container
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./Notebook-image/notebooks:/usr/src/app/notebooks  # Mount local notebooks directory to container
+    image: jupyter/minimal-notebook:latest  # Using an official Jupyter Notebook image
+    environment:
+      - JUPYTER_ENABLE_LAB=yes 
+    networks:
+      - uber-net
+  
+  shell-export:
+    build:
+      context: ./Shell-image/
+      dockerfile: Dockerfile.linux
+    environment:
+      SQL_SERVER_INSTANCE: "localhost"
+      DATABASE_NAME: "UBER"
+    volumes:
+      - ./export:/export  # Export CSVs to the 'exports' folder
+    networks:
+      - uber-net
+
+  powershell-export:
+    build:
+      context: ./Shell-image/
+      dockerfile: Dockerfile.powershell
+    environment:
+      SQL_SERVER_INSTANCE: "localhost"
+      DATABASE_NAME: "UBER"
+    volumes:
+      - ./export:/export  # Export CSVs to the 'exports' folder
+    networks:
+      - uber-net
+  
+  airflow:
+    image: apache/airflow:2.5.0
+    container_name: airflow-container
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=False
+    volumes:
+      - ./airflow/dags:/usr/local/airflow/dags  # DAGs for Airflow
+    ports:
+      - "8080:8080"  # Airflow UI
+    networks:
+      - uber-net
+
+networks:
+  uber-net:
+    driver: bridge

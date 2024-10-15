@@ -1,0 +1,40 @@
+FROM mcr.microsoft.com/mssql-tools
+
+# Set working directory
+WORKDIR /usr/src/app
+
+# Ensure the script is executable
+RUN apt-get update && apt-get install -y dos2unix
+ # Convert line endings
+RUN dos2unix /usr/src/app/export_tables.sh 
+# Make it executable
+RUN chmod +x /usr/src/app/export_tables.sh  
+
+# Install necessary dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    gnupg2 \
+    apt-transport-https \
+    unixodbc \
+    unixodbc-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install the Microsoft ODBC Driver for SQL Server
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
+    && curl https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list > /etc/apt/sources.list.d/mssql-release.list \
+    && apt-get update \
+    && ACCEPT_EULA=Y apt-get install -y msodbcsql17 \
+    && apt-get clean
+
+# Copy the shell script into the container
+COPY ./export_tables.sh /usr/src/app/export_tables.sh
+
+# Define environment variables
+ENV SQL_SERVER_INSTANCE=localhost
+ENV DATABASE_NAME=UBER
+
+# Mount the host directory where CSVs will be exported
+VOLUME [ "/export" ]
+
+# Command to run the export script
+CMD ["/bin/bash", "/usr/src/app/export_tables.sh"]

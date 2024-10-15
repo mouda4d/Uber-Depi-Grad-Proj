@@ -1,0 +1,6 @@
+# Dockerfile for Airflow using official Apache image
+
+FROM apache/airflow:2.5.0
+
+# Install Docker SDK and other dependencies
+RUN pip install --user --no-cache-dir docker pandas sqlalchemy
