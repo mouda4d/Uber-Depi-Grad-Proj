@@ -1,0 +1,20 @@
+# New Dockerfile for Jupyter Notebook
+FROM python:3.9-slim
+
+# Set working directory
+WORKDIR /usr/src/app
+
+# copy requirements.txt to container 
+# Install dependencies
+# Copy the requirements.txt file into the container
+COPY ./requirements.txt /usr/src/app/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the notebook into the container
+COPY ./notebooks/1-fill_columns.ipynb /usr/src/app/notebooks/
+
+# Expose the Jupyter port
+EXPOSE 8888
+
+# Start Jupyter Notebook server, Run Jupyter notebook
+CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--allow-root"]

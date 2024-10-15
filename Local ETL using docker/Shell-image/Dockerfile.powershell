@@ -1,0 +1,33 @@
+FROM mcr.microsoft.com/powershell
+
+# Set working directory
+WORKDIR /usr/src/app
+
+# Install necessary dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    gnupg2 \
+    apt-transport-https \
+    unixodbc \
+    unixodbc-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install the Microsoft ODBC Driver for SQL Server
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
+    && curl https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list > /etc/apt/sources.list.d/mssql-release.list \
+    && apt-get update \
+    && ACCEPT_EULA=Y apt-get install -y msodbcsql17 \
+    && apt-get clean
+
+# Copy the PowerShell script into the container
+COPY ./export_tables_powershell.ps1 /usr/src/app/export_tables.ps1
+
+# Define environment variables
+ENV SQL_SERVER_INSTANCE=localhost
+ENV DATABASE_NAME=UBER
+
+# Mount the host directory where CSVs will be exported
+VOLUME [ "/export" ]
+
+# Command to run the PowerShell script
+CMD ["pwsh", "/usr/src/app/export_tables.ps1"]
