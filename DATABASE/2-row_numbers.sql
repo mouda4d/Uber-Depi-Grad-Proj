@@ -22,14 +22,14 @@ with allCTE AS (
 UPDATE uber_data_final
 SET 
     uber_data_final.passenger_id = allCTE.passenger_id,
-    uber_data_final.driver_id = allCTE.driver_id + allCTE.passenger_id + 700000,
+    uber_data_final.driver_id = allCTE.driver_id + 700000,
     uber_data_final.vehiclemake_id = allCTE.vehiclemake_id,
     uber_data_final.vehicle_id = allCTE.vehicle_id,
     uber_data_final.paymentmethod_id = allCTE.paymentmethod_id,
     uber_data_final.paymentstatus_id = allCTE.paymentstatus_id,
     uber_data_final.payment_id = allCTE.payment_id,
     uber_data_final.longitude_ID = allCTE.longitude_id,
-    uber_data_final.latitude_ID = allCTE.latitude_id + allCTE.longitude_id + 700000,
+    uber_data_final.latitude_ID = allCTE.latitude_id + 700000,
     uber_data_final.pickup_id = allCTE.pickup_id,
     uber_data_final.dropoff_id = allCTE.dropoff_id,
     uber_data_final.request_id = allCTE.request_id
