@@ -1,4 +1,5 @@
 # End-to-End Taxi Data Pipeline using Azure
+![PIPELINE](https://github.com/user-attachments/assets/2d2d8b98-dfe5-4823-b8c1-c14fb0a71485)
 
 This project demonstrates a comprehensive end-to-end data pipeline for processing taxi data utilizing various Azure services, including Data Lake Storage, Data Factory, Databricks, Synapse Analytics, and Azure Machine Learning. The pipeline automates the Extract, Load, and Transform (ELT) processes, enabling insightful analysis and predictive modeling.
 
