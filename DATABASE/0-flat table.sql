@@ -38,7 +38,7 @@ BEGIN
 END;
 
 BULK INSERT uber_data_final
-FROM 'E:\\DEPI FINAL PROJECT\\uber_data.csv'
+FROM "E:\DEPIfINALpROJECT\uber_data.csv"
 WITH
 (
     FIELDTERMINATOR = ',',  -- CSV delimiter
