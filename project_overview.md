@@ -12,7 +12,7 @@ Key objectives include:
 ## Architecture
 The project follows the ELT (Extract, Load, Transform) model, leveraging Azure Data Factory (ADF), Databricks, and Azure Synapse. The pipeline starts with data ingestion, followed by transformation across multiple stages, ultimately loading data into a star schema for business intelligence and analytics.
 
-![Architecture Placeholder](./images/architecture-diagram.png)
+![PIPELINE](DESIGNS/PIPELINE.png)
 
 ## Tech Stack
 - **Data Ingestion & Orchestration**: Azure Data Factory (ADF), Apache Airflow
@@ -42,7 +42,7 @@ Data is ingested using Azure Data Factory from the Docker-hosted Uber database. 
 - **ForEach Activity**: Iterates through tables to ingest data.
 - **Copy Activity**: Loads data into Azure Data Lake Storage Gen2 as Parquet files.
 
-![ADF Pipeline Placeholder](./images/adf-pipeline.png)
+![ADF PIPELINE](DESIGNS/ADF%PIPELINE.png)
 
 ## Medallion Architecture
 The data is processed using the **Medallion architecture**, which consists of the following layers:
@@ -71,7 +71,7 @@ The Gold layer contains a **star schema** including:
 ### Fact Table:
 - **fct_request**: Holds data about ride requests, trip details, and associated costs, including metrics like `BaseFare`, `TipAmount`, `TotalCost`, and `distance_traveled`.
 
-![Star Schema](DESIGNS/Star%20Schema)
+![Star Schema.png](DESIGNS/Star%20Schema.png)
 
 ## Conclusion (Insights Gained)
 **TBD**: This section will include insights gained from analyzing the Uber ride data, focusing on trends in fare costs, trip patterns, user behavior, and vehicle performance. It will also discuss how these insights can optimize ride pricing, promotions, and improve overall service quality.
