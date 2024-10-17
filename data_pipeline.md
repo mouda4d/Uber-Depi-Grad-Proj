@@ -193,6 +193,117 @@ CREATE TABLE User (
 );
 
 ```
+
+## Docker & Airflow Pipeline
+1. **SQL Server Container**:
+   - Hosts the SQL Server database (UBER) where the CSV data is ingested and stored.
+   - Runs SQL scripts to create tables, bulk-insert CSV data, and perform transformations.
+
+2. **Jupyter Notebook Container**:
+   - Provides a development environment for data exploration, transformation, and analysis.
+   - Integrated with Apache Spark to perform transformations on the flat tables.
+
+3. **Shell Script Export Container**:
+   - Exports the transformed data from SQL Server into CSV format.
+   - Automates exporting tables such as User, Vehicles, Trips, etc.
+
+4. **PowerShell Export Container**:
+   - Similar to the Shell container, but tailored for environments that require PowerShell for table exports.
+
+5. **Apache Airflow**:
+   - Orchestrates the entire ETL process, controlling the execution flow between the SQL Server, Jupyter, and export steps.
+
+## Key Components
+1. **SQL Server Setup**:
+   - **Image**: `mcr.microsoft.com/mssql/server:2019-latest`.
+   - SQL scripts are mounted into the container and executed in a specific order to:
+     1. Create necessary database objects (tables, relationships).
+     2. Perform bulk inserts of merged CSV data into a flat table.
+     3. Conduct data transformations.
+
+2. **Jupyter Notebook**:
+   - **Image**: `jupyter/minimal-notebook:latest`.
+   - Used to develop Python scripts for data manipulation and transformations.
+   - Provides a user-friendly interface for inspecting data and performing advanced computations using Apache Spark.
+
+3. **Shell and PowerShell Export Containers**:
+   - Shell and PowerShell scripts are used to automate the export of data from SQL Server back to CSV files.
+   - These scripts ensure that the tables are exported into a defined `/export` directory mounted on the host machine.
+
+4. **Apache Airflow**:
+   - **Image**: `apache/airflow:2.5.0`.
+   - DAG (Directed Acyclic Graph) orchestrates the following tasks:
+     1. SQL Execution: Runs the `0-flatetable.sql` file in SQL Server.
+     2. Jupyter Execution: Triggers the Jupyter Notebook container to process and transform the data.
+     3. Export Execution: Runs the Shell/PowerShell export containers to extract the final CSVs.
+
+## Folder Structure
+The folder structure of the project is organized as follows:
+```
+project-root/
+│
+├── SQL-image/
+│   ├── Dockerfile.sql               # Dockerfile for SQL Server container
+│   ├── sql/
+│   │   ├── 0-flatetable.sql         # SQL script to create the flat table
+│   │   ├── 1-transformations.sql    # SQL script for data transformations
+│   │   └── additional-scripts.sql   # Any additional SQL scripts
+│   ├── data/
+│   │   └── uber_data.csv            # Merged CSV data
+│
+├── Notebook-image/
+│   ├── Dockerfile.jupyter            # Dockerfile for Jupyter container
+│   └── notebooks/
+│       └── uber_analysis.ipynb       # Jupyter notebook for data processing
+│
+├── Shell-image/
+│   ├── Dockerfile.linux              # Dockerfile for Shell export container
+│   ├── export_tables.sh              # Shell script for exporting tables to CSV
+│
+├── Powershell-image/
+│   ├── Dockerfile.powershell         # Dockerfile for PowerShell export container
+│   ├── export_tables_powershell.ps1  # PowerShell script for exporting tables to CSV
+│
+├── airflow/
+│   └── dags/
+│       └── uber_etl_dag.py           # Airflow DAG file orchestrating the pipeline
+│
+└── docker-compose.yml                # Docker Compose file for all services
+```
+
+## Key Features & Workflow
+1. **CSV Data Processing**:
+   - The project uses data sourced from Kaggle and generated with Python scripts. The CSV files are merged into a single flat table (`uber_data.csv`).
+
+2. **SQL Server Processing**:
+   - SQL Server runs SQL scripts in order:
+     1. `0-flatetable.sql`: Creates the flat table and bulk inserts data from the CSV.
+     2. `1-transformations.sql`: Performs transformations on the data (e.g., date formatting, column adjustments).
+     3. Additional scripts: Optional further processing.
+
+3. **Data Transformation**:
+   - Jupyter notebooks and Apache Spark are used to manipulate the flat table data before exporting it back into SQL Server.
+
+4. **Data Export**:
+   - The export scripts (Shell or PowerShell) retrieve the transformed data from SQL Server and export it as CSV files into the `/export` directory.
+
+5. **Airflow Orchestration**:
+   - Apache Airflow controls the sequence of steps to ensure data processing happens in the correct order:
+     1. First, SQL scripts are executed.
+     2. Then, Jupyter notebooks process and analyze the data.
+     3. Finally, the export scripts run to save results as CSV files.
+
+## Technologies Used
+- **Docker**: Containerization of all services, including SQL Server, Jupyter, Shell/PowerShell export containers, and Airflow.
+- **SQL Server**: Relational database management system for storing Uber data.
+- **Jupyter**: Interactive environment for data analysis and transformation.
+- **Apache Spark**: Distributed data processing engine used in conjunction with Jupyter for large-scale transformations.
+- **Apache Airflow**: Workflow management system for orchestrating the pipeline.
+- **Bash/PowerShell Scripts**: Automates exporting data from SQL Server into CSV format.
+
+
+
+
 ### 1. Data Extraction
 
 **Sources**:
