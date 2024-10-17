@@ -42,7 +42,7 @@ Data is ingested using Azure Data Factory from the Docker-hosted Uber database. 
 - **ForEach Activity**: Iterates through tables to ingest data.
 - **Copy Activity**: Loads data into Azure Data Lake Storage Gen2 as Parquet files.
 
-![ADF PIPELINE](DESIGNS/ADF%PIPELINE.png)
+![ADF PIPELINE](DESIGNS/ADF%20PIPELINE.png)
 
 ## Medallion Architecture
 The data is processed using the **Medallion architecture**, which consists of the following layers:
