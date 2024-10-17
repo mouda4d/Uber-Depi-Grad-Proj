@@ -1,4 +1,4 @@
-# Uber Data Pipeline & Analysis Project
+ne# Uber Data Pipeline & Analysis Project
 
 ## Project Overview
 This project aims to build a data pipeline and warehouse for an Uber-like ride-hailing service that processes and stores ride, user, vehicle, and fare data. The goal is to analyze the NYC Taxi dataset from Kaggle, focusing on fare data, trip patterns, and sales performance across various dimensions. 
@@ -42,7 +42,7 @@ Data is ingested using Azure Data Factory from the Docker-hosted Uber database. 
 - **ForEach Activity**: Iterates through tables to ingest data.
 - **Copy Activity**: Loads data into Azure Data Lake Storage Gen2 as Parquet files.
 
-![ADF PIPELINE](DESIGNS/ADF%20PIPELINE.png)
+![ADF PIPELINE](DESIGNS/ADF%20pipeline.png)
 
 ## Medallion Architecture
 The data is processed using the **Medallion architecture**, which consists of the following layers:
