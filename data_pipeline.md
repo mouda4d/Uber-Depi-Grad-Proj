@@ -342,5 +342,76 @@ Data is visualized in **Power BI**, providing insights such as:
 - **Customer segmentation**.
 
 ### 6. Machine Learning with Azure ML
+## Overview
+This project focuses on predicting the price of a trip based on the trip distance using a machine learning model. The primary goal is to gather, examine, and preprocess the data to build a reliable linear regression model. After building the model, the evaluation process is carried out, and the model is saved for deployment.
 
-Machine learning models are built using **Azure Machine Learning** to predict taxi demand based on historical data (time, location, fare).
+## Business Understanding
+The key business question is: **How can we predict the price of a trip based on the trip distance?**
+
+We started by gathering the data and examining it to understand the relationship between the trip distance and trip price. Missing data was handled, and outliers were addressed to ensure model accuracy.
+
+## Data Collection & Examination
+The data was gathered from the **Silver to Gold** notebook on **Databricks** as part of a larger ETL (Extract, Transform, Load) pipeline. The target variable selected for prediction is **trip price**, and the feature used is **trip distance**. The following steps were taken during this phase:
+
+1. **Data cleaning**: Handle missing values using imputation (mean imputation was chosen).
+2. **Feature engineering**: Analyze the correlation between features using statistical plots and feature selection techniques.
+
+### Heatmap of Correlation (Placeholder for Image)
+In the feature engineering section, a heatmap was created to analyze the correlation between features.
+
+[Insert Heatmap Here]
+
+## Tools Used
+- **Jupyter Notebook**: For local development and experimentation.
+- **Databricks**: For handling the ETL process and managing data pipelines.
+- **Python**: For scripting and building the machine learning model.
+
+### Python Libraries
+The following Python libraries were used in this project:
+
+```python
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.linear_model import LinearRegression
+from sklearn.pipeline import Pipeline
+from sklearn.metrics import mean_squared_error, r2_score
+```
+
+## Data Preprocessing
+1. **Handling Missing Values**: Missing data was imputed using the mean.
+2. **Categorical Data**: One-hot encoding was applied to any categorical features that might influence the predictions.
+3. **Outliers**: Outliers in the trip distance and price were handled using statistical techniques.
+
+## Model Building
+The **Linear Regression** model was chosen to predict the price based on the trip distance. A pipeline was created to streamline the process:
+
+1. Data was split into training and testing sets.
+2. Feature scaling was performed using **StandardScaler**.
+3. Linear regression was applied, and the model was fitted to the training data.
+
+## Model Evaluation
+The model was evaluated using **Root Mean Squared Error (RMSE)** and **R-squared (R²)** metrics to assess its accuracy:
+
+- **RMSE**: The error metric to measure the average error of the model predictions.
+
+## Model Deployment
+The model was saved as `model.pkl` to be deployed in production for further use.
+
+## Challenges Faced
+During the project, the following challenges were encountered:
+
+1. **Installing dependencies**: There were issues with installing `pandas` and `scikit-learn` due to dependency conflicts.
+2. **Data corruption**: Some data was corrupted during the gathering process, which caused delays in preprocessing.
+3. **External factors**: Time constraints and external factors impacted the pace of development.
+
+## Conclusion
+This project highlights the end-to-end process of gathering, cleaning, and building a machine learning model to predict trip prices based on trip distance. The saved model is now ready for deployment on **Databricks**.
+
+## Recommendation
+- **Feature Expansion**: Consider using additional features such as time of day, weather, and vehicle type to improve model accuracy.
+- **Model Tuning**: Hyperparameter tuning can be applied to further enhance the model performance.
