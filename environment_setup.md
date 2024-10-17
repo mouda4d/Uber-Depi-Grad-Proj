@@ -6,20 +6,65 @@ This guide will walk you through setting up a data processing pipeline using Doc
 
 Before you begin, ensure you have the following installed and configured:
 
-# Docker: For running SQL Server locally in a container.
-# Azure Account: To access Azure services like Data Lake, Data Factory, Databricks, Synapse Analytics, Power BI, and Azure Machine Learning.
+#### Docker: For running SQL Server locally in a container.
+#### Azure Account: To access Azure services like Data Lake, Data Factory, Databricks, Synapse Analytics, Power BI, and Azure Machine Learning.
 
 ## Step 1: Set Up SQL Server in Docker
 
-1. Pull the Microsoft SQL Server Docker image:
-   docker pull mcr.microsoft.com/mssql/server:2019-latest
+### Key Components
+1. #### SQL Server Setup:
+- Image: mcr.microsoft.com/mssql/server:2019-latest.
+- SQL scripts are mounted into the container and executed in a specific order to:
+  1. Create necessary database objects (tables, relationships).
+  2. Perform bulk inserts of merged CSV data into a flat table.
+  3. Conduct data transformations.
+2. #### Jupyter Notebook:
+- Image: jupyter/minimal-notebook:latest.
+- Used to develop Python scripts for data manipulation and transformations.
+- Provides a user-friendly interface for inspecting data and performing advanced computations using Apache Spark.
+3. #### Shell and PowerShell Export Containers:
+- Shell and PowerShell scripts are used to automate the export of data from SQL Server back to CSV files.
+- These scripts ensure that the tables are exported into a defined /export directory mounted on the host machine.
+4. #### Apache Airflow:
+- Image: apache/airflow:2.5.0.
+- DAG (Directed Acyclic Graph) orchestrates the following tasks:
+  1. SQL Execution: Runs the 0-flatetable.sql file in SQL Server.
+  2. Jupyter Execution: Triggers the Jupyter Notebook container to process and transform the data.
+  3. Export Execution: Runs the Shell/PowerShell export containers to extract the final CSVs.
+Folder Structure
+The folder structure of the project is organized as follows:
+```
+project-root/
+│
+├── SQL-image/
+│   ├── Dockerfile.sql               # Dockerfile for SQL Server container
+│   ├── sql/
+│   │   ├── 0-flatetable.sql         # SQL script to create the flat table
+│   │   ├── 1-transformations.sql    # SQL script for data transformations
+│   │   └── additional-scripts.sql   # Any additional SQL scripts
+│   ├── data/
+│   │   └── uber_data.csv            # Merged CSV data
+│
+├── Notebook-image/
+│   ├── Dockerfile.jupyter            # Dockerfile for Jupyter container
+│   └── notebooks/
+│       └── uber_analysis.ipynb       # Jupyter notebook for data processing
+│
+├── Shell-image/
+│   ├── Dockerfile.linux              # Dockerfile for Shell export container
+│   ├── export_tables.sh              # Shell script for exporting tables to CSV
+│
+├── Powershell-image/
+│   ├── Dockerfile.powershell         # Dockerfile for PowerShell export container
+│   ├── export_tables_powershell.ps1  # PowerShell script for exporting tables to CSV
+│
+├── airflow/
+│   └── dags/
+│       └── uber_etl_dag.py           # Airflow DAG file orchestrating the pipeline
+│
+└── docker-compose.yml                # Docker Compose file for all services
 
-2. Run the SQL Server container with a specified password:
-   docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=YourStrong!Passw0rd' -p 1433:1433 -d mcr.microsoft.com/mssql/server:2019-latest
-
-3. Use a tool like SQL Server Management Studio (SSMS) or Azure Data Studio to connect to the running SQL Server instance.
-
-4. Upload your raw datasets into the SQL Server instance for further processing.
+```
 
 ## Step 2: Create Azure Data Lake and Data Factory
 
