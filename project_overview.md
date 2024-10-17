@@ -1,4 +1,4 @@
-ne# Uber Data Pipeline & Analysis Project
+# NYC Taxi Database Data Engineering Pipeline & Analysis Project
 
 ## Project Overview
 This project aims to build a data pipeline and warehouse for an Uber-like ride-hailing service that processes and stores ride, user, vehicle, and fare data. The goal is to analyze the NYC Taxi dataset from Kaggle, focusing on fare data, trip patterns, and sales performance across various dimensions. 
