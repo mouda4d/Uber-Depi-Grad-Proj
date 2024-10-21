@@ -26,5 +26,3 @@ To run this project, clone the repository and follow the setup instructions in t
 - Thanks to the Azure team for providing comprehensive cloud services.
 - Thanks to the developers of the NYC Taxi dataset and the `Faker` library.
 
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
